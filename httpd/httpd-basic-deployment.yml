@@ -1,17 +1,36 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: my-apache-deployment
-  namespace: eks-sample-app
+  name: docker-eks-demo-deployment
+  namespace: eks-docker-app
+  labels:
+     app: docker-eks-demo  
 spec:
   replicas: 1
+  selector:
+    matchLabels:
+      app: docker-eks-demo
   template:
     metadata:
       labels:
-        app: my-apache
+        app: docker-eks-demo
     spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: kubernetes.io/arch
+                operator: In
+                values:
+                - amd64
+                - arm64
       containers:
-      - name: my-apache-container1
-        image: httpd
+      - name: docker-eks
+        image: andylu882016/docker-spring-show:latest
         ports:
-        - containerPort: 80
+        - name: http
+          containerPort: 8086
+        imagePullPolicy: IfNotPresent
+      nodeSelector:
+        kubernetes.io/os: linux
