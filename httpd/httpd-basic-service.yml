@@ -1,13 +1,14 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: my-apache-service
-  namespace: eks-sample-app
+  name: docker-eks-demo-service
+  namespace: eks-docker-app
+  labels:
+    app: docker-eks-demo
 spec:
   selector:
-    app: my-apache
-  type: LoadBalancer
+    app: docker-eks-demo
   ports:
-    - name: my-apache-port
-      port: 8080
-      targetPort: 80
+    - protocol: TCP
+      port: 8086
+      targetPort: 8086
